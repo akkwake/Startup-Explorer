@@ -1,6 +1,6 @@
 # Explorer
 
-Finds startup applications, or adds applications on any startup group.
+Finds startup applications, or adds applications to any startup group.
 
 ```csharp
 public static class Explorer
