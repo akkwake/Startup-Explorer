@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace StartupExplorer
 {
     /// <summary>
-    /// Finds startup applications, or adds applications on any startup group.
+    /// Finds startup applications, or adds applications to any startup group.
     /// </summary>
     public static class Explorer
     {
