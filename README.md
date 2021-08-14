@@ -163,7 +163,7 @@ public static void SplitPathAndArguments(string fullPath, String& path, String& 
 
 ### **SplitPathAndArguments(String&, String&)**
 
-Splits the application path and arguments.Every application has its own arguments format so this method is slightly convoluted.
+Splits the application path and arguments. Every application has its own arguments format so this method is slightly convoluted.
 
 ```csharp
 public void SplitPathAndArguments(String& path, String& args)
