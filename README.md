@@ -1,32 +1,40 @@
 # Explorer
+
+Finds startup applications, or adds applications on any startup group.
+
 ```csharp
 public static class Explorer
 ```
 
 ## Methods
 
-### **GetAllGroups()**
+### **GetAll()**
 
 Returns all startup applications found, sorted by group.
 
 ```csharp
-public static Dictionary<StartupGroup, StartupApplicationData[]> GetAllGroups()
+public static Dictionary<StartupGroup, StartupApplicationData[]> GetAll()
+```
+### **GetAllEnabled()**
+Returns all enabled startup applications found, sorted by group.
+```csharp
+public static Dictionary<StartupGroup, StartupApplicationData[]> GetAllEnabled()
 ```
 
-### **GetGroupData(StartupGroup)**
+### **GetGroup(StartupGroup)**
 
 Returns all startup applications found in a specific group.
 
 ```csharp
-public static StartupApplicationData[] GetGroupData(StartupGroup startupGroup)
+public static StartupApplicationData[] GetGroup(StartupGroup startupGroup)
 ```
 
-### **GetEnabledStartupEntries(StartupGroup)**
+### **GetGroupEnabled(StartupGroup)**
 
 Returns all enabled startup application found in a specific group.
 
 ```csharp
-public static List<StartupApplicationData> GetEnabledStartupEntries(StartupGroup startupGroup)
+public static List<StartupApplicationData> GetGroupEnabled(StartupGroup startupGroup)
 ```
 
 ### **AddToStartup(String, String, StartupGroup)**
@@ -42,8 +50,6 @@ public static void AddToStartup(string appName, string appPath, StartupGroup sta
 
 ---
 # StartupApplicationData
-
-Namespace: StartupExplorer
 
 Contains data about a single application found in one of the startup groups. Has a few useful methods to change whether this specific application is enabled to run on startup, or remove it from startup entirely.
 
