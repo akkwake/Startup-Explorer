@@ -15,7 +15,7 @@ namespace StartupExplorer
     /// </summary>
     class GroupDataFolder : GroupData
     {
-        public GroupDataFolder(StartupGroup group, string path, string approvedPath, RegistryHive regHive, RegistryView regView, bool requiresAdminPrivilages) : base(group, path, approvedPath, regHive, regView, requiresAdminPrivilages)
+        public GroupDataFolder(StartupGroup group, string path, string approvedPath, RegistryHive regHive, RegistryView regView, bool requiresAdminPrivileges) : base(group, path, approvedPath, regHive, regView, requiresAdminPrivileges)
         { }
         
 
@@ -41,7 +41,7 @@ namespace StartupExplorer
             {
                 //Get application state
                 AppStartupState state = GetApplicationState(files[i].Name);
-                StartupApplicationData appData = new StartupApplicationData(files[i].Name, files[i].FullName, files[i].DirectoryName, group, state, requiresAdminPrivilages);
+                StartupApplicationData appData = new StartupApplicationData(files[i].Name, files[i].FullName, files[i].DirectoryName, group, state, requiresAdminPrivileges);
                 applicationData[i] = appData;
             }
 

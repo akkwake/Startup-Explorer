@@ -93,6 +93,16 @@ namespace StartupExplorer
         }
 
         /// <summary>
+        /// Returns the GroupData object for the specified StartupGroup.
+        /// </summary>
+        /// <param name="group"></param>
+        /// <returns></returns>
+        public static GroupData GetGroupData(StartupGroup group)
+        {
+            return Database.Group[group];
+        }
+        
+        /// <summary>
         /// Adds a program to windows startup in the specified startup group. 
         /// `appName` can be whatever.
         /// `appPath` requires the executable file as well (ex. C:\Foo.exe).

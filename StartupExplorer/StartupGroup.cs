@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace StartupExplorer
 {
     /// <summary>
-    /// Enumeration of startup groups. Note that there are more groups not included here (or in the database).
+    /// Enumeration of startup groups.
     /// </summary>
     public enum StartupGroup
     {
@@ -17,7 +17,7 @@ namespace StartupExplorer
         StartMenuUser,
         /// <summary>
         /// Common startup folder in start menu.
-        /// Requires administrator privilages to modify.
+        /// Requires administrator privileges to modify.
         /// </summary>
         StartMenuCommon,
         /// <summary>
@@ -26,12 +26,12 @@ namespace StartupExplorer
         HKCU,
         /// <summary>
         /// Local Machine x32 (wow6432 node).
-        /// Requires administrator privilages to modify.
+        /// Requires administrator privileges to modify.
         /// </summary>
         HKLM32,
         /// <summary>
         /// Local Machine x64.
-        /// Requires administrator privilages to modify.
+        /// Requires administrator privileges to modify.
         /// </summary>
         HKLM64
         

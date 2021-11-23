@@ -12,7 +12,7 @@ namespace StartupExplorer
     /// </summary>
     class GroupDataRegistry : GroupData
     {
-        public GroupDataRegistry(StartupGroup group, string path, string approvedPath, RegistryHive regHive, RegistryView regView, bool requiresAdminPrivilages) : base(group, path, approvedPath, regHive, regView, requiresAdminPrivilages)
+        public GroupDataRegistry(StartupGroup group, string path, string approvedPath, RegistryHive regHive, RegistryView regView, bool requiresAdminPrivileges) : base(group, path, approvedPath, regHive, regView, requiresAdminPrivileges)
         { }
 
 
@@ -38,7 +38,7 @@ namespace StartupExplorer
                     AppStartupState state = GetApplicationState(entries[i]);
 
                     //Initialize object and update the array
-                    StartupApplicationData appData = new StartupApplicationData(entries[i], entryPath, keyName, group, state, requiresAdminPrivilages);
+                    StartupApplicationData appData = new StartupApplicationData(entries[i], entryPath, keyName, group, state, requiresAdminPrivileges);
                     appDataInKey[i] = appData;
                 }
             }

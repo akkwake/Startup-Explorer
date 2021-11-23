@@ -18,29 +18,29 @@ namespace StartupExplorer
         /// <summary>
         /// This is the path to the key, or the folder that holds the path to the executable that will run on startup.
         /// </summary>
-        protected readonly string path;
+        public readonly string path;
         /// <summary>
         /// This is the path to the key that determines whether a startup application is enabled.
         /// </summary>
-        protected readonly string approvedPath;
+        public readonly string approvedPath;
 
         protected readonly RegistryHive registryHive;
         protected readonly RegistryView registryView;
 
         /// <summary>
-        /// If this group requires admin privilages to modify, this should be true.
+        /// If this group requires admin privileges to modify, this should be true.
         /// </summary>
-        public readonly bool requiresAdminPrivilages;
+        public readonly bool requiresAdminPrivileges;
 
 
-        public GroupData(StartupGroup group, string path, string approvedPath, RegistryHive regHive, RegistryView regView, bool requiresAdminPrivilages)
+        public GroupData(StartupGroup group, string path, string approvedPath, RegistryHive regHive, RegistryView regView, bool requiresAdminPrivileges)
         {
             this.group = group;
             this.path = path;
             this.approvedPath = approvedPath;
             this.registryHive = regHive;
             this.registryView = regView;
-            this.requiresAdminPrivilages = requiresAdminPrivilages;
+            this.requiresAdminPrivileges = requiresAdminPrivileges;
         }
 
 

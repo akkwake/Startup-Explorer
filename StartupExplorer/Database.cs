@@ -13,7 +13,7 @@ namespace StartupExplorer
     /// Each group also has a key in the registry that determines whether each application will actually run.
     /// The database contains data to look through each group separately and a dictionary to help sort through them.
     /// </summary>
-    public static class Database
+    internal static class Database
     {
         /// <summary>
         /// Dictionary containing all startup group data sorted using the StartupGroup enumerator.
@@ -22,8 +22,11 @@ namespace StartupExplorer
 
         public const string registry_startup_path = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
         public const string registry_startup_approved_path = "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run";
+        public const string registry_startup32_path = "Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run";
         public const string registry_startup32_approved_path = "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run32";
         public const string folder_startup_approved_path = "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder";
+        
+        public const string registry_runonce_path = "Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce";
 
         /// <summary>
         /// Key values in the startup approved paths, have this value when the application is set to run on startup.
@@ -52,10 +55,10 @@ namespace StartupExplorer
             GroupData folder_user = new GroupDataFolder(StartupGroup.StartMenuUser,
                 Environment.GetFolderPath(Environment.SpecialFolder.Startup),
                 folder_startup_approved_path,
-                RegistryHive.CurrentUser, RegistryView.Registry64,
+                RegistryHive.CurrentUser, RegistryView.Default,
                 false);
 
-            GroupData folder_commonuser = new GroupDataFolder(StartupGroup.StartMenuCommon,
+            GroupData folder_common = new GroupDataFolder(StartupGroup.StartMenuCommon,
                 Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup),
                 folder_startup_approved_path,
                 RegistryHive.LocalMachine, RegistryView.Registry64,
@@ -68,9 +71,9 @@ namespace StartupExplorer
                 false);
 
             GroupData registry_hklm32 = new GroupDataRegistry(StartupGroup.HKLM32,
-                registry_startup_path,
+                registry_startup32_path,
                 registry_startup32_approved_path,
-                RegistryHive.LocalMachine, RegistryView.Registry32,
+                RegistryHive.LocalMachine, RegistryView.Registry64,
                 true);
 
             GroupData registry_hklm64 = new GroupDataRegistry(StartupGroup.HKLM64,
@@ -82,7 +85,7 @@ namespace StartupExplorer
 
             //Add to dictionary
             Group.Add(StartupGroup.StartMenuUser, folder_user);
-            Group.Add(StartupGroup.StartMenuCommon, folder_commonuser);
+            Group.Add(StartupGroup.StartMenuCommon, folder_common);
             Group.Add(StartupGroup.HKCU, registry_hkcu);
             Group.Add(StartupGroup.HKLM32, registry_hklm32);
             Group.Add(StartupGroup.HKLM64, registry_hklm64);

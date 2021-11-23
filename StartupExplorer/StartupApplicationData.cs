@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Principal;
 using System.IO;
+using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace StartupExplorer
 {
@@ -15,6 +17,7 @@ namespace StartupExplorer
     /// Contains data about a single application found in one of the startup groups.
     /// Has methods to change whether this specific application is enabled to run on startup, or remove it from startup entirely.
     /// </summary>
+    [Serializable]
     public class StartupApplicationData
     {
         /// <summary>
@@ -53,9 +56,9 @@ namespace StartupExplorer
         public AppStartupState state { get; private set; }
 
         /// <summary>
-        /// True if this application belongs to a group that requires administrator privilages.
+        /// True if this application belongs to a group that requires administrator privileges to modify.
         /// </summary>
-        public readonly bool requiresAdminPrivilages;
+        public readonly bool requiresAdminPrivileges;
 
         /// <summary>
         /// Returns true if this application is in the start menu folders.
@@ -69,17 +72,19 @@ namespace StartupExplorer
         }
 
 
-        public StartupApplicationData(string name, string path, string origin, StartupGroup startupGroup, AppStartupState state, bool requiresAdminPrivilages)
+        public StartupApplicationData(string name, string path, string origin, StartupGroup startupGroup, AppStartupState state, bool requiresAdminPrivileges)
         {
             this.name = name;
             this.rawPath = path;
             this.groupPath = origin;
             this.startupGroup = startupGroup;
             this.state = state;
-            this.requiresAdminPrivilages = requiresAdminPrivilages;
+            this.requiresAdminPrivileges = requiresAdminPrivileges;
 
             if (!isShortcut)
                 SplitPathAndArguments(out executablePath, out arguments);
+            else
+                executablePath = rawPath;
         }
 
         /// <summary>
@@ -132,82 +137,75 @@ namespace StartupExplorer
         /// <param name="args"></param>
         public static void SplitPathAndArguments(string fullPath, out string path, out string args)
         {
-            string[] pathAndArgs = new string[2];
+            //If path is surrounded by quotes
             if (fullPath.IndexOf('"') == 0)
             {
-                //error when there is a character '"' but no arguments
-                pathAndArgs[0] = fullPath.TrimStart('"');
-                int index = pathAndArgs[0].IndexOf('"');
-                pathAndArgs[1] = pathAndArgs[0].Substring(index, pathAndArgs[0].Length - index);
-                pathAndArgs[0] = pathAndArgs[0].Substring(0, index);
-                pathAndArgs[1] = pathAndArgs[1].TrimStart('"');
-                pathAndArgs[1] = pathAndArgs[1].TrimStart();
+                //Remove first quote
+                string tempString = fullPath.TrimStart('"');
+                int index = tempString.IndexOf('"');
+
+                //Split at second quote
+                path = tempString.Substring(0, index);
+                args = tempString.Substring(index + 1, tempString.Length - index - 1).Trim();
             }
-            //This returns the path and argument if Path doesn't start with ' " '.
             else
             {
-                pathAndArgs[0] = fullPath;
-                int index;
                 //Check indexof('/' and '-')
                 string[] argDelimiters = new string[2] { " -", " /" };
-                foreach (string s in argDelimiters)
+
+                //If there are no arguments, no split
+                int minIndex = fullPath.Length;
+
+                //Split at the smallest index (first argument found while parsing)
+                foreach (string delim in argDelimiters)
                 {
-                    //psakse apla apo lastindexof('.') teleia mexri keno
-                    if ((index = pathAndArgs[0].IndexOf(s, StringComparison.Ordinal)) > 0)
-                    {
-                        pathAndArgs[0] = pathAndArgs[0].Substring(0, index);
-                        pathAndArgs[1] = fullPath.Substring(index, fullPath.Length - index);
-                    }
+                    int index = fullPath.IndexOf(delim);
+                    if (index != -1)
+                        minIndex = Math.Min(index, minIndex);
                 }
 
+                path = fullPath.Substring(0, minIndex);
+                args = fullPath.Substring(minIndex, fullPath.Length - minIndex).Trim();
             }
-
-            path = pathAndArgs[0];
-            args = pathAndArgs[1];
         }
-
 
         /// <summary>
         ///Splits the application path and arguments. Every application has its own arguments format so this method is slightly convoluted.
         /// </summary>
-        /// <param name="fullPath"></param>
         /// <param name="path"></param>
         /// <param name="args"></param>
         public void SplitPathAndArguments(out string path, out string args)
         {
-            //SplitPathAndArguments(this.path, out path, out args);
-            string[] pathAndArgs = new string[2];
+            //If path is surrounded by quotes
             if (rawPath.IndexOf('"') == 0)
             {
-                //error when there is a character '"' but no arguments
-                pathAndArgs[0] = rawPath.TrimStart('"');
-                int index = pathAndArgs[0].IndexOf('"');
-                pathAndArgs[1] = pathAndArgs[0].Substring(index, pathAndArgs[0].Length - index);
-                pathAndArgs[0] = pathAndArgs[0].Substring(0, index);
-                pathAndArgs[1] = pathAndArgs[1].TrimStart('"');
-                pathAndArgs[1] = pathAndArgs[1].TrimStart();
+                //Remove first quote
+                string tempString = rawPath.TrimStart('"');
+                int index = tempString.IndexOf('"');
+
+                //Split at second quote
+                path = tempString.Substring(0, index);
+                args = tempString.Substring(index + 1, tempString.Length - index - 1).Trim();
             }
-            //This returns the path and argument if Path doesn't start with ' " '.
             else
             {
-                pathAndArgs[0] = rawPath;
-                int index;
                 //Check indexof('/' and '-')
                 string[] argDelimiters = new string[2] { " -", " /" };
-                foreach (string s in argDelimiters)
+
+                //If there are no arguments, no split
+                int minIndex = rawPath.Length;
+
+                //Split at the smallest index (first argument found while parsing)
+                foreach (string delim in argDelimiters)
                 {
-                    //psakse apla apo lastindexof('.') teleia mexri keno
-                    if ((index = pathAndArgs[0].IndexOf(s, StringComparison.Ordinal)) > 0)
-                    {
-                        pathAndArgs[0] = pathAndArgs[0].Substring(0, index);
-                        pathAndArgs[1] = rawPath.Substring(index, rawPath.Length - index);
-                    }
+                    int index = rawPath.IndexOf(delim);
+                    if (index != -1)
+                        minIndex = Math.Min(index, minIndex);
                 }
 
+                path = rawPath.Substring(0, minIndex);
+                args = rawPath.Substring(minIndex, rawPath.Length - minIndex).Trim();
             }
-
-            path = pathAndArgs[0];
-            args = pathAndArgs[1];
         }
 
     }
